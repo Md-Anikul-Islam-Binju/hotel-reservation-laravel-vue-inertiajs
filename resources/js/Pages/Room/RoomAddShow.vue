@@ -56,20 +56,15 @@
                     </div>
 
                     <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group mg-b-10-force">
+
+                        <div class="col-lg-6">
                             <label class="form-control-label">Select Amenities: <span class="tx-danger">*</span></label>
-                            <select  class="form-control" name="amenities_id" v-model="form.amenities_id"  data-placeholder="Choose Select Amenities">
-                                <option label="Choose Select Amenities"></option>
-                                <option v-for="data in amenities">{{ data.name }}</option>
-                            </select>
+                            <multiselect v-model="form.amenities_id" :options="amenities.map( obj => {return {name: obj.name}})" :multiple="true"
+                                         :close-on-select="false" :clear-on-select="false" :preserve-search="true"
+                                         placeholder="Select some amenities" label="name" track-by="name"
+                                         :preselect-first="true">
+                            </multiselect>
                         </div>
-                    </div>
-
-
-<!--                    <div class="col-lg-6">-->
-<!--                        <label class="form-control-label">Select Amenities: <span class="tx-danger">*</span></label>-->
-<!--                    </div>-->
 
 
                         <div class="col-lg-6">
@@ -139,18 +134,18 @@
 <script>
 import AdminIndex from "@/Pages/AdminIndex";
 import {Link} from "@inertiajs/inertia-vue3";
-
+import Multiselect from 'vue-multiselect'
 export default {
     name: "RoomAddShow",
-    components: {AdminIndex,Link},
+    components: {AdminIndex,Multiselect,Link},
 
     props:{
         amenities:Object,
         rooms:Object,
     },
+
     data(){
         return{
-
             form:this.$inertia.form({
                 name:'',
                 details:'',
@@ -159,7 +154,6 @@ export default {
                 maximum_occupancy:'',
                 price:'',
                 amenities_id:'',
-                //amenities:[],
                 status:'',
             })
         }
@@ -177,7 +171,12 @@ export default {
             }
         },
     },
+    mounted() {
+        console.log(this.amenities)
+    }
+
 }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style scoped>
 </style>

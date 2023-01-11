@@ -17,7 +17,7 @@ class RoomController extends Controller
     //Room Create Table and Data Table Show
     public function index()
     {
-        $amenities = Amenities::all();
+        $amenities = Amenities::latest()->get();;
         $rooms = Room::latest()->get();
         return Inertia::render('Room/RoomAddShow',compact('amenities','rooms'));
     }
@@ -25,6 +25,11 @@ class RoomController extends Controller
     //Room Store
     public function store(Request $request)
     {
+        $array = [];
+        foreach ($request->amenities_id as $amenity)
+        {
+            $array[] = $amenity['name'];
+        }
         $request->validate([
             'name' => 'required',
             'price' => 'required',
@@ -37,7 +42,7 @@ class RoomController extends Controller
                 $imageName = time().'.'.$request->image->extension();
                 $request->image->storeAs('public/hotel-image', $imageName);
                 $room = Room::create([
-                    'amenities_id' => $request->amenities_id,
+                    'amenities_id' => implode(',',$array),
                     'name' => $request->name,
                     'details' => $request->details,
                     'size' => $request->size,
